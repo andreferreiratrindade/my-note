@@ -12,6 +12,7 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build": "quasar build",
+    "build-development": "quasar build -m spa loads .env.development variables",
     "postinstall": "quasar prepare"
   },
   "dependencies": {

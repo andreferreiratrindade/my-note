@@ -47,7 +47,7 @@ export class InfraStack extends cdk.Stack {
         },
       ],
     });
-
+/*
     // 3) Cognito User Pool + App Client
     const userPool = new cognito.UserPool(this, "NotesUserPool", {
       selfSignUpEnabled: true,
@@ -136,10 +136,10 @@ export class InfraStack extends cdk.Stack {
       authorizer,
       authorizationType: apigateway.AuthorizationType.COGNITO,
     });
-
+*/
     // 7) Deploy frontend to S3 and invalidate CloudFront
     new s3deploy.BucketDeployment(this, "DeployFrontend", {
-      sources: [s3deploy.Source.asset("../frontend/dist")],
+      sources: [s3deploy.Source.asset("../frontend/my-note/dist")],
       destinationBucket: siteBucket,
       distribution,
       distributionPaths: ["/*"],
@@ -147,9 +147,9 @@ export class InfraStack extends cdk.Stack {
 
     // Outputs
     new cdk.CfnOutput(this, "CloudFrontDomain", { value: distribution.domainName });
-    new cdk.CfnOutput(this, "ApiUrl", { value: api.url });
-    new cdk.CfnOutput(this, "UserPoolId", { value: userPool.userPoolId });
-    new cdk.CfnOutput(this, "UserPoolClientId", { value: userPoolClient.userPoolClientId });
-    new cdk.CfnOutput(this, "NotesTableName", { value: notesTable.tableName });
+   // new cdk.CfnOutput(this, "ApiUrl", { value: api.url });
+  //  new cdk.CfnOutput(this, "UserPoolId", { value: userPool.userPoolId });
+//    new cdk.CfnOutput(this, "UserPoolClientId", { value: userPoolClient.userPoolClientId });
+   // new cdk.CfnOutput(this, "NotesTableName", { value: notesTable.tableName });
   }
 }

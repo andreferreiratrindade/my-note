@@ -1,9 +1,9 @@
 import { UserManager } from "oidc-client-ts";
-
+import config from "../config/config";
 const cognitoAuthConfig = {
-    authority: "https://cognito-idp.sa-east-1.amazonaws.com/sa-east-1_r18CRlnE4",
-    client_id: "5rfgqff289amvdotaudukqkpop",
-    redirect_uri: "http://localhost:9000/callback",
+    authority: config.COGNITO_AUTHORITY,
+    client_id: config.COGNITO_CLIENT_ID,
+    redirect_uri: config.COGNITO_REDIRECT_URI,
     response_type: "code",
     scope: "email openid phone"
 };
@@ -14,9 +14,9 @@ export const userManager = new UserManager({
 });
 
 export function signOutRedirect () {
-    const clientId = "5rfgqff289amvdotaudukqkpop";
-    const logoutUri = "http://localhost:9000";
-    const cognitoDomain = "https://sa-east-1r18crlne4.auth.sa-east-1.amazoncognito.com";
+    const clientId = config.COGNITO_CLIENT_ID;
+    const logoutUri = config.COGNITO_LOGOUT_REDIRECT_URI;
+    const cognitoDomain = config.COGNITO_APP_DOMAIN;
     void userManager.removeUser();
     window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
 };
