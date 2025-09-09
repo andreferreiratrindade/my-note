@@ -2,8 +2,12 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
 
 import { defineConfig } from '#q-app/wrappers';
+import * as dotenv from 'dotenv';
 
-export default defineConfig((/* ctx */) => {
+export default defineConfig((ctx ) => {
+
+  const envFile = `.env.${process.env.NODE_ENV}`;
+  const env = dotenv.config({ path: envFile }).parsed || {};
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
@@ -32,7 +36,7 @@ export default defineConfig((/* ctx */) => {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#build
     build: {
-      env: process.env,
+      env: env,
       target: {
         browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
         node: 'node20',

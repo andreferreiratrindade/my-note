@@ -36,7 +36,6 @@ const selectDocument = (doc: Document) => {
 onMounted(async () => {
   try {
     const res = await api.get<Document[]>('/notes');
-    debugger
     documents.value = res.data;
   } catch (err) {
     console.error('Error fetching documents:', err);
