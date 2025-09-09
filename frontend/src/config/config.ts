@@ -1,4 +1,3 @@
-
 export default {
   COGNITO_APP_DOMAIN: process.env.COGNITO_APP_DOMAIN?.toString() || '',
   COGNITO_REDIRECT_URI: process.env.COGNITO_REDIRECT_URI?.toString() || '',
