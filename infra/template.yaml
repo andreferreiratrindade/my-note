@@ -1,0 +1,10 @@
+/Users/AndreTrindade/Documents/Old_lapTop/Programacao/my-note/infra/src/Infra/Infra.csproj : error NU1102: Unable to find package Constructs with version (>= 12.2.0)
+/Users/AndreTrindade/Documents/Old_lapTop/Programacao/my-note/infra/src/Infra/Infra.csproj : error NU1102:   - Found 1326 version(s) in nuget.org [ Nearest version: 10.4.2 ]
+/Users/AndreTrindade/Documents/Old_lapTop/Programacao/my-note/infra/src/Infra/Infra.csproj : error NU1102: Unable to find package Amazon.CDK.AWS.APIGateway with version (>= 2.149.0)
+/Users/AndreTrindade/Documents/Old_lapTop/Programacao/my-note/infra/src/Infra/Infra.csproj : error NU1102:   - Found 286 version(s) in nuget.org [ Nearest version: 2.0.0-alpha.0 ]
+/Users/AndreTrindade/Documents/Old_lapTop/Programacao/my-note/infra/src/Infra/Infra.csproj : error NU1102: Unable to find package Amazon.CDK.AWS.Cognito with version (>= 2.149.0)
+/Users/AndreTrindade/Documents/Old_lapTop/Programacao/my-note/infra/src/Infra/Infra.csproj : error NU1102:   - Found 286 version(s) in nuget.org [ Nearest version: 2.0.0-alpha.0 ]
+/Users/AndreTrindade/Documents/Old_lapTop/Programacao/my-note/infra/src/Infra/Infra.csproj : error NU1102: Unable to find package Amazon.CDK.AWS.DynamoDB with version (>= 2.149.0)
+/Users/AndreTrindade/Documents/Old_lapTop/Programacao/my-note/infra/src/Infra/Infra.csproj : error NU1102:   - Found 286 version(s) in nuget.org [ Nearest version: 2.0.0-alpha.0 ]
+/Users/AndreTrindade/Documents/Old_lapTop/Programacao/my-note/infra/src/Infra/Infra.csproj : error NU1102: Unable to find package Amazon.CDK.AWS.Lambda with version (>= 2.149.0)
+/Users/AndreTrindade/Documents/Old_lapTop/Programacao/my-note/infra/src/Infra/Infra.csproj : error NU1102:   - Found 286 version(s) in nuget.org [ Nearest version: 2.0.0-alpha.0 ]
