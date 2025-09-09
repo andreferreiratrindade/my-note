@@ -31,7 +31,7 @@ jobs:
       - name: Build project
         run: |
           cd frontend
-          npm run build-development
+          npm run build-staging
 
       # 5. Configure AWS credentials
       - name: Configure AWS credentials
