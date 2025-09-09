@@ -9,13 +9,18 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using MyNote.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace MyNote;
 
 public class NoteService
 {
         private readonly DynamoDBContext _dbContext;
-
+        public readonly Dictionary<string, string> Headers = new Dictionary<string, string> { { "Access-Control-Allow-Origin", "*" } };
+        private readonly JsonSerializerSettings _options = new JsonSerializerSettings 
+        { 
+            ContractResolver = new CamelCasePropertyNamesContractResolver() 
+        };
         public NoteService(IAmazonDynamoDB dynamoDbClient)
         {
             _dbContext = new DynamoDBContext(dynamoDbClient);
@@ -28,20 +33,23 @@ public class NoteService
                 return new APIGatewayProxyResponse
                 {
                     StatusCode = (int)HttpStatusCode.BadRequest,
-                    Body = "Note content cannot be empty."
+                    Body = "Note content cannot be empty.",
+                    Headers =Headers
                 };
             }
 
             newNote.UserId = userId;
             newNote.NoteId = Guid.NewGuid().ToString();
             newNote.UpdatedAt = DateTime.UtcNow.ToLongDateString();
+            newNote.CreatedAt = DateTime.UtcNow.ToLongDateString();
 
             await _dbContext.SaveAsync(newNote);
 
             return new APIGatewayProxyResponse
             {
                 StatusCode = (int)HttpStatusCode.Created,
-                Body = JsonConvert.SerializeObject(newNote)
+                Body = JsonConvert.SerializeObject(newNote, _options),
+                Headers =Headers
             };
         }
 
@@ -51,7 +59,8 @@ public class NoteService
             return new APIGatewayProxyResponse
             {
                 StatusCode = (int)HttpStatusCode.OK,
-                Body = JsonConvert.SerializeObject(notes)
+                Body = JsonConvert.SerializeObject(notes, _options),
+                Headers =Headers
             };
         }
 
@@ -63,7 +72,8 @@ public class NoteService
                 return new APIGatewayProxyResponse
                 {
                     StatusCode = (int)HttpStatusCode.NotFound,
-                    Body = "Note not found."
+                    Body = "Note not found.",
+                    Headers =Headers
                 };
             }
 
@@ -75,7 +85,8 @@ public class NoteService
             return new APIGatewayProxyResponse
             {
                 StatusCode = (int)HttpStatusCode.OK,
-                Body = JsonConvert.SerializeObject(noteToUpdate)
+                Body = JsonConvert.SerializeObject(noteToUpdate, _options),
+                Headers =Headers
             };
         }
 
@@ -84,7 +95,8 @@ public class NoteService
             await _dbContext.DeleteAsync<Note>(userId, noteId);
             return new APIGatewayProxyResponse
             {
-                StatusCode = (int)HttpStatusCode.NoContent
+                StatusCode = (int)HttpStatusCode.NoContent,
+                Headers =Headers
             };
         }
     }

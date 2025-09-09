@@ -20,6 +20,7 @@ public class Function
 {
     private readonly NoteService _noteService;
 
+
     // Constructor to inject the DynamoDB service.
     public Function()
     {
@@ -37,14 +38,15 @@ public class Function
     /// <returns>An API Gateway proxy response object.</returns>
     public async Task<APIGatewayProxyResponse> FunctionHandlerAsync(APIGatewayProxyRequest request, ILambdaContext context)
     {
-        context.Logger.LogLine($"Received {request.HttpMethod} request for path {request.Path}");
-
-        // A quick check to make sure the user is authenticated.
-        // In a real application, you would handle this more robustly.
-        var userId = request.RequestContext.Authorizer?.Claims["sub"] ?? "anonymous";
-
         try
         {
+            context.Logger.LogLine($"Received {request.HttpMethod} request for path {request.Path}");
+            context.Logger.LogLine($"Request: {request}");
+            // A quick check to make sure the user is authenticated.
+            // In a real application, you would handle this more robustly.
+            var userId = request.RequestContext.Authorizer?.Claims["sub"] ;
+
+
             // This switch statement handles the routing logic.
             // It checks the HTTP method and the request path to determine which
             // NoteService method to call.
@@ -66,7 +68,11 @@ public class Function
                         var updatedNote =  JsonConvert.DeserializeObject<Note>(request.Body);
                         return await _noteService.UpdateNoteAsync(userId, noteId, updatedNote);
                     }
-                    return new APIGatewayProxyResponse { StatusCode = (int)HttpStatusCode.BadRequest, Body = "Note ID is missing from the request path." };
+                    return new APIGatewayProxyResponse { StatusCode = (int)HttpStatusCode.BadRequest, 
+                        Body = "Note ID is missing from the request path." ,
+                        Headers = _noteService.Headers
+
+                    };
 
                 case "DELETE":
                     var pathParams = request.PathParameters;
@@ -75,13 +81,20 @@ public class Function
                         var noteId = pathParams["noteId"];
                         return await _noteService.DeleteNoteAsync(userId, noteId);
                     }
-                    return new APIGatewayProxyResponse { StatusCode = (int)HttpStatusCode.BadRequest, Body = "Note ID is missing from the request path." };
+                    return new APIGatewayProxyResponse
+                    {
+                        StatusCode = (int)HttpStatusCode.BadRequest, 
+                        Body = "Note ID is missing from the request path.",
+                        Headers = _noteService.Headers
+                    };
 
                 default:
                     return new APIGatewayProxyResponse
                     {
                         StatusCode = (int)HttpStatusCode.NotFound,
-                        Body = "Method not found."
+                        Body = "Method not found.",
+                        Headers = _noteService.Headers
+
                     };
             }
         }
@@ -91,7 +104,8 @@ public class Function
             return new APIGatewayProxyResponse
             {
                 StatusCode = (int)HttpStatusCode.InternalServerError,
-                Body = $"An internal server error occurred: {ex.Message}"
+                Body = $"An internal server error occurred: {ex.Message}",
+                Headers = _noteService.Headers
             };
         }
     }
