@@ -3,7 +3,7 @@ name: Backend CI/CD - Lambda
 on:
   push:
     paths:
-      - "backend/MyNote/MyNote/**"
+      - "backend/MyNote/MyNote/src/**"
     branches: [ main ]
 
 jobs:

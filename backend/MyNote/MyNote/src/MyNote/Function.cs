@@ -40,7 +40,6 @@ public class Function
     {
         try
         {
-            
             context.Logger.LogLine($"Received {request.HttpMethod} request for path {request.Path}");
             context.Logger.LogLine($"Request: {request}");
             // A quick check to make sure the user is authenticated.
