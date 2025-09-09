@@ -2,11 +2,12 @@ using Amazon.DynamoDBv2.DataModel;
 
 namespace MyNote.Models;
 
+
 [DynamoDBTable("notes")]
 public class Note
 {
     [DynamoDBHashKey("userId")]
-    
+
     public string UserId { get; set; }
 
     [DynamoDBRangeKey("noteId")]
