@@ -1,4 +1,4 @@
-name: My Notes Backend CI/CD
+name: Backend CI/CD - Lambda
 
 on:
   push:

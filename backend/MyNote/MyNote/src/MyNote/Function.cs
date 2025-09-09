@@ -40,6 +40,7 @@ public class Function
     {
         try
         {
+            
             context.Logger.LogLine($"Received {request.HttpMethod} request for path {request.Path}");
             context.Logger.LogLine($"Request: {request}");
             // A quick check to make sure the user is authenticated.
@@ -56,7 +57,7 @@ public class Function
                     return await _noteService.GetNotesAsync(userId);
 
                 case "POST":
-                    
+
                     var newNote = JsonConvert.DeserializeObject<Note>(request.Body);
                     return await _noteService.CreateNoteAsync(userId, newNote);
 
@@ -68,7 +69,7 @@ public class Function
                         var updatedNote =  JsonConvert.DeserializeObject<Note>(request.Body);
                         return await _noteService.UpdateNoteAsync(userId, noteId, updatedNote);
                     }
-                    return new APIGatewayProxyResponse { StatusCode = (int)HttpStatusCode.BadRequest, 
+                    return new APIGatewayProxyResponse { StatusCode = (int)HttpStatusCode.BadRequest,
                         Body = "Note ID is missing from the request path." ,
                         Headers = _noteService.Headers
 
@@ -83,7 +84,7 @@ public class Function
                     }
                     return new APIGatewayProxyResponse
                     {
-                        StatusCode = (int)HttpStatusCode.BadRequest, 
+                        StatusCode = (int)HttpStatusCode.BadRequest,
                         Body = "Note ID is missing from the request path.",
                         Headers = _noteService.Headers
                     };
