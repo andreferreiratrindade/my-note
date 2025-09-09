@@ -21,6 +21,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Install Lambda Global Tool
+        run: dotnet tool install -g Amazon.Lambda.Tools
+
       # Restore dependencies
       - name: Restore dependencies
         run:  |

@@ -2,7 +2,6 @@ using Amazon.DynamoDBv2.DataModel;
 
 namespace MyNote.Models;
 
-
 [DynamoDBTable("notes")]
 public class Note
 {
