@@ -44,7 +44,8 @@ public class Function
             context.Logger.LogLine($"Request: {request}");
             // A quick check to make sure the user is authenticated.
             // In a real application, you would handle this more robustly.
-            var userId = request.RequestContext.Authorizer?.Claims["sub"] ;
+            var userId = request.RequestContext.Authorizer?.Claims["sub"] ; 
+            var pathParameters = request.PathParameters;
 
 
             // This switch statement handles the routing logic.
@@ -53,6 +54,8 @@ public class Function
             switch (request.HttpMethod)
             {
                 case "GET":
+                    
+                    
                     if (pathParameters != null && pathParameters.ContainsKey("noteId"))
                     {
                         var noteId = pathParameters["noteId"];
@@ -66,7 +69,7 @@ public class Function
                     return await _noteService.CreateNoteAsync(userId, newNote);
 
                 case "PUT":
-                    var pathParameters = request.PathParameters;
+                    
                     if (pathParameters != null && pathParameters.ContainsKey("noteId"))
                     {
                         var noteId = pathParameters["noteId"];
@@ -80,10 +83,10 @@ public class Function
                     };
 
                 case "DELETE":
-                    var pathParams = request.PathParameters;
-                    if (pathParams != null && pathParams.ContainsKey("noteId"))
+                    
+                    if (pathParameters != null && pathParameters.ContainsKey("noteId"))
                     {
-                        var noteId = pathParams["noteId"];
+                        var noteId = pathParameters["noteId"];
                         return await _noteService.DeleteNoteAsync(userId, noteId);
                     }
                     return new APIGatewayProxyResponse
