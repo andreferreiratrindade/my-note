@@ -17,7 +17,9 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/environment',
     component: () => import('layouts/EnvironmentLayout.vue'), meta: { requiresAuth: true },
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    children: [{ path: '', component: () => import('pages/IndexPage.vue') },
+        { path: '/editNote/:id', component: () => import('pages/Notes/EditNote.vue') }
+    ],
   },
 
   // Always leave this as last one,

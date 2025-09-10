@@ -53,6 +53,11 @@ public class Function
             switch (request.HttpMethod)
             {
                 case "GET":
+                    if (pathParameters != null && pathParameters.ContainsKey("noteId"))
+                    {
+                        var noteId = pathParameters["noteId"];
+                        return await _noteService.GetNoteByIdAsync(userId, noteId);
+                    }
                     return await _noteService.GetNotesAsync(userId);
 
                 case "POST":

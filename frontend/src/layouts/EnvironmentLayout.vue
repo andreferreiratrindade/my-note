@@ -15,7 +15,7 @@
     </q-drawer>
 
     <q-page-container>
-      <DocumentEnvironment />
+        <router-view />
     </q-page-container>
   </q-layout>
 </template>
@@ -26,9 +26,8 @@ import { userManager, signOutRedirect } from 'src/services/OidcClientService';
 
 import { onMounted, ref } from 'vue';
 import ListDocumentComponent from 'src/components/ListDocumentComponent.vue';
-import DocumentEnvironment from 'pages/DocumentEnvironment.vue';
 
-let emailUser : string = '';
+const emailUser = ref('Loading...');
 
 const leftDrawerOpen = ref(false);
 
@@ -44,8 +43,7 @@ onMounted(async () => {
   const fetchedUser = await userManager.getUser();
   console.log('Fetched user:', fetchedUser);
   if (fetchedUser) {
-    emailUser = fetchedUser.profile.email || 'No Email';
-    console.log('User email:', emailUser);
+    emailUser.value = fetchedUser.profile.email || 'No Email';
   }
 });
 
