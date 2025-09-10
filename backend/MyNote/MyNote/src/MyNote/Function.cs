@@ -41,10 +41,11 @@ public class Function
         try
         {
             context.Logger.LogLine($"Received {request.HttpMethod} request for path {request.Path}");
-            context.Logger.LogLine($"Request: {request}");
+            context.Logger.LogLine($"Request: {request.Body}");
+            context.Logger.LogLine($"Request: {request.PathParameters}");
             // A quick check to make sure the user is authenticated.
             // In a real application, you would handle this more robustly.
-            var userId = request.RequestContext.Authorizer?.Claims["sub"] ; 
+            var userId = request.RequestContext.Authorizer?.Claims["sub"] ;
             var pathParameters = request.PathParameters;
 
 
@@ -54,8 +55,8 @@ public class Function
             switch (request.HttpMethod)
             {
                 case "GET":
-                    
-                    
+
+
                     if (pathParameters != null && pathParameters.ContainsKey("noteId"))
                     {
                         var noteId = pathParameters["noteId"];
@@ -69,7 +70,7 @@ public class Function
                     return await _noteService.CreateNoteAsync(userId, newNote);
 
                 case "PUT":
-                    
+
                     if (pathParameters != null && pathParameters.ContainsKey("noteId"))
                     {
                         var noteId = pathParameters["noteId"];
@@ -79,11 +80,10 @@ public class Function
                     return new APIGatewayProxyResponse { StatusCode = (int)HttpStatusCode.BadRequest,
                         Body = "Note ID is missing from the request path." ,
                         Headers = _noteService.Headers
-
                     };
 
                 case "DELETE":
-                    
+
                     if (pathParameters != null && pathParameters.ContainsKey("noteId"))
                     {
                         var noteId = pathParameters["noteId"];

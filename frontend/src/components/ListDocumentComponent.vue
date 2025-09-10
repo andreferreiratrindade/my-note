@@ -13,7 +13,8 @@
 </template>
 
 <script setup lang="ts">
-//import { api } from 'boot/axios';
+
+
 import { api } from 'src/boot/axios';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -29,21 +30,26 @@ interface NewNote {
   content: string;
 }
 
-const documents = ref<Document[]>([]);
+const noteIdSelected = ref('');
 
-const selectDocument = (doc: Document) => {
+const documents = ref<Document[]>([]);
+const emit = defineEmits(['noteSelected']);
+
+function selectDocument(doc: Document) {
   console.log('Selected doc:', doc);
-  // 👉 navigate to document details if you want
-};
+  router.push({ path: `/editNote/${doc.noteId}` }).catch((err) => console.error('Router error:', err));
+
+  emitNoteSelected(doc.noteId);
+}
+
+function emitNoteSelected(noteId: string) {
+ noteIdSelected.value = noteId
+  emit('noteSelected', noteId);
+}
 
 const formatDefaultTitle = () => {
   const now = new Date();
-  return `# ${now.getFullYear()} ${now.toLocaleString('en-US', {
-    month: 'long',
-  })} ${String(now.getDate()).padStart(2, '0')} - ${String(now.getHours()).padStart(
-    2,
-    '0',
-  )}:${String(now.getMinutes()).padStart(2, '0')}`;
+  return `# ${String(now.getDate()).padStart(2, '0')} ${now.toLocaleString('pt-BR', {month: 'long'})} ${now.getFullYear()} - ${String(now.getHours()).padStart(2, '0')} :${String(now.getMinutes()).padStart(2, '0')} :${String(now.getSeconds()).padStart(2, '0')}`;
 };
 
 async function newDocument() {
@@ -55,18 +61,26 @@ async function newDocument() {
   try {
     const res = await api.post('/notes', newNote);
     const noteId = res.data.noteId;
-    await router.push({ path: `/editNote/${noteId}` });
+    getNotes().catch((err) => console.error('Error refreshing notes:', err));
+    router.push({ path: `/editNote/${noteId}` }).catch((err) => console.error('Router error:', err));
+    emitNoteSelected(noteId);
   } catch (err: unknown) {
     console.error('Error saving note:', err);
   }
 }
 
-onMounted(async () => {
+async function getNotes() {
   try {
     const res = await api.get<Document[]>('/notes');
     documents.value = res.data;
   } catch (err) {
     console.error('Error fetching documents:', err);
   }
+}
+
+onMounted(async () => {
+    await getNotes();
 });
+
+
 </script>

@@ -99,6 +99,7 @@ public class NoteService
         }
 
         noteToUpdate.Title = updatedNote.Title ?? noteToUpdate.Title;
+        noteToUpdate.Content = updatedNote.Content;
         noteToUpdate.UpdatedAt = DateTime.UtcNow.ToLongDateString();
 
         await _dbContext.SaveAsync(noteToUpdate);
