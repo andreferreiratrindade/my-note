@@ -1,18 +1,41 @@
 <template>
-    <q-page class="q-pa-lg col-12">
-        <q-input v-model="note.title" label="Title" outlined @keydown="markDirty" />
-        <q-input v-model="note.content" type="textarea" label="Content" outlined @keydown="markDirty" />
-
-        <div class="q-mt-sm text-caption">
-            <span v-if="isSaving">💾 Saving...</span>
-            <span v-else-if="lastError" class="text-negative">⚠️ {{ lastError }}</span>
-            <span v-else>✅ All changes saved</span>
-        </div>
-    </q-page>
+    <div>
+        <q-header elevated>
+            <q-toolbar class="bg-grey-3 text-black">
+                <q-btn round flat icon="keyboard_arrow_left" class="WAL__drawer-open q-mr-sm"
+                    @click="toggleLeftDrawer" />
+                <q-space />
+                <div v-if="note.noteId" >
+                    <span v-if="isSaving">   <q-circular-progress
+                    indeterminate
+                    rounded
+                    color="black"
+                    track-color="transparent"
+                    size="33px"
+                    /></span>
+                    <span v-else-if="lastError" class="text-negative">⚠️ {{ lastError }}</span>
+                    <span v-else><q-icon name="done_all" color="blue" size="33px" /></span>
+                    </div>
+            </q-toolbar>
+        </q-header>
+        <q-page class="q-pa-lg col col-12" >
+            <div class="q-gutter-md">
+                  <q-input  square borderless bg-color="white" input-style="padding-left: 10px !important ;"
+                  v-model="note.title"  @keydown="markDirty" class="col-12 q-ml-md" :blur="saveNote"  />
+                    <q-editor v-model="note.content" min-height="50vh" autogrow flat :blur="saveNote"  @keydown="markDirty"/>
+            </div>
+        </q-page>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { reactive, ref, onMounted, onUnmounted } from "vue";
+const emit = defineEmits(['toggleLeftDrawer']);
+
+// Define the toggleLeftDrawer method
+function toggleLeftDrawer() {
+    emit("toggleLeftDrawer");
+}
 import { api } from "src/boot/axios";
 import { watchDebounced } from "@vueuse/core";
 
@@ -33,15 +56,15 @@ let oldNote: Note = { ...note };
 const isSaving = ref(false);
 const lastError = ref<string | null>(null);
 
- const props = defineProps({
-      noteId: {
+const props = defineProps({
+    noteId: {
         type: String,
         required: true
-      }
-    });
+    }
+});
 // --- Mark dirty (user started typing) ---
 function markDirty() {
-      isSaving.value = true;
+    isSaving.value = true;
 };
 // --- API: Load note ---
 async function getNote() {
@@ -71,7 +94,7 @@ async function saveNote() {
     try {
         await api.put(`/notes/${note.noteId}`, note);
         oldNote = { ...note };
-        console.log("Note saved!");
+        
     } catch (err) {
         console.error("Error saving note:", err);
         lastError.value =
@@ -112,6 +135,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
+    void saveNote();
     document.removeEventListener("visibilitychange", handleVisibilityChange);
     window.removeEventListener("beforeunload", handleBeforeUnload);
 });

@@ -3,7 +3,7 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title> Meu Caderno </q-toolbar-title>
-        <q-btn color="primary" label="Login with Cognito" @click="loginWithCognito" />
+        <q-btn color="primary" label="Login with Cognito" @click="loginWithCognito"/>
 
       </q-toolbar>
     </q-header>

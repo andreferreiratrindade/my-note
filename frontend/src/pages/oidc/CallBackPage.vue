@@ -22,11 +22,8 @@ const router = useRouter();
 onMounted(async () => {
   const user = await userManager.signinCallback();
   if (user) {
-    localStorage.setItem("access_token", user.access_token);
-    console.log("User logged in:", user);
     await router.push("/environment");
   } else {
-    console.error("User not found");
     await router.push("/login");
   }
 });

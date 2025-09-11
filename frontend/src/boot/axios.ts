@@ -1,6 +1,6 @@
 import { defineBoot } from '#q-app/wrappers';
 import axios, { type AxiosInstance } from 'axios';
-
+import { userManager } from 'src/services/OidcClientService';
 declare module 'vue' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
@@ -19,12 +19,16 @@ const api = axios.create({ baseURL: 'https://xssv6rh9ce.execute-api.sa-east-1.am
 export default defineBoot(({ app }) => {
 
  // Add Authorization header if token exists
-  api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  api.interceptors.request.use(async (config) => {
+    //const token = localStorage.getItem('access_token');
+
+    const user = await userManager.getUser();
+       // debugger
+      if (user) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${user.access_token}`;
+      }
+    ;
     return config;
   });
 
