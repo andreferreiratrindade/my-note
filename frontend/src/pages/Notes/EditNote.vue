@@ -73,7 +73,11 @@ async function getNote() {
 
     try {
         const res = await api.get<Note>(`/notes/${noteId}`);
-        Object.assign(note, res.data);
+        Object.assign(note, {
+          ...res.data,
+          title: res.data.title ?? "",
+          content: res.data.content ?? ""
+        });
         oldNote = { ...note };
     } catch (err) {
         console.error('Error loading note:', err);

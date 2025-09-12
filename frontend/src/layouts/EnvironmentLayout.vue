@@ -30,8 +30,7 @@
                     </q-toolbar>
 
                     <q-scroll-area style="height: calc(100% - 100px)">
-                        <ListDocumentComponent :noteId="noteId" @noteSelected="NoteSelectedHandler" ref="listDocumentRef"
-                         />
+                        <ListDocumentComponent  @noteSelected="NoteSelectedHandler" ref="listDocumentRef"/>
                     </q-scroll-area>
                 </q-drawer>
                 <q-page-sticky position="bottom-right" :offset="[18, 18]">
@@ -70,10 +69,10 @@ const route = useRoute();
 const emailUser = ref('Loading...');
 const noteId = ref(''); // Example noteId, replace with actual logic to get noteId
 const leftDrawerOpen = ref(false);
-let count = 0;
+const count = ref(0);
 function NoteSelectedHandler(selectedNoteId: string) {
     noteId.value = selectedNoteId;
-    count++;
+    count.value++;
 }
 
 function toggleLeftDrawer() {
@@ -109,6 +108,7 @@ async function newDocument() {
     };
 
     try {
+        debugger
         const res = await api.post('/notes', newNote);
         await listDocumentRef.value.getNotes();
         const noteId = res.data.noteId;
@@ -124,7 +124,7 @@ async function newDocument() {
 async function NoteDeletedHandler() {
     console.log('Note deleted, navigating to environment');
     noteId.value = '';
-    count++;
+    count.value++;
     await listDocumentRef.value.getNotes();
 
     router.push({ path: `/environment` }).catch((err) => console.error('Router error:', err));

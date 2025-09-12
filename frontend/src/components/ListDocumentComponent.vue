@@ -52,6 +52,7 @@ function emitNoteSelected(noteId: string) {
 
 async function getNotes() {
     try {
+        debugger
         const res = await api.get<Document[]>('/notes');
         documents.value = res.data;
     } catch (err) {
@@ -59,7 +60,11 @@ async function getNotes() {
     }
 }
 
+let loaded = false;
+
 onMounted(async () => {
+    if (loaded) return;
+    loaded = true;
     await getNotes();
 });
 
