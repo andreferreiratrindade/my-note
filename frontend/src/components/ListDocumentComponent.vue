@@ -1,7 +1,12 @@
 <template>
     <div>
-        <q-list>
-            <q-item-label header> Minhas notas </q-item-label>
+        <q-toolbar class="bg-grey-2">
+         <div style="font-size: medium;">
+            Minhas Anotações
+        </div>
+        </q-toolbar>
+
+        <q-list >
             <q-item v-for="doc in documents"
                     :key="doc.noteId"
                     clickable @click="selectDocument(doc)" v-ripple :active="(noteIdSelected===doc.noteId)" active-class="note-selected ">
@@ -23,14 +28,23 @@ import { api } from 'src/boot/axios';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-const router = useRouter();
 
+const router = useRouter();
+const isProcessing = ref(true);
 interface Document {
     noteId: string;
     title: string;
 }
 
+const props = defineProps({
+    noteId: {
+        type: String,
+        required: false,
+    },
+});
+
 const noteIdSelected = ref('');
+
 
 const documents = ref<Document[]>([]);
 const emit = defineEmits(['noteSelected']);
@@ -52,20 +66,20 @@ function emitNoteSelected(noteId: string) {
 
 async function getNotes() {
     try {
-        debugger
+        isProcessing.value = true;
         const res = await api.get<Document[]>('/notes');
         documents.value = res.data;
     } catch (err) {
         console.error('Error fetching documents:', err);
+    } finally {
+        isProcessing.value = false;
     }
 }
 
-let loaded = false;
 
 onMounted(async () => {
-    if (loaded) return;
-    loaded = true;
     await getNotes();
+    noteIdSelected.value = props.noteId|| ""
 });
 
 
@@ -74,5 +88,5 @@ onMounted(async () => {
 <style lang="sass">
 .note-selected
   color: white
-  background: #00988D
+  background: #23d5ab
 </style>

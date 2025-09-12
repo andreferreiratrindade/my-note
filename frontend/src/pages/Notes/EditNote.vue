@@ -1,22 +1,18 @@
 <template>
     <div>
-        <q-header elevated>
-            <q-toolbar class="bg-grey-3 text-black">
+        <q-header style="background-color:#f0f0f0f2 !important" >
+            <q-toolbar style="background-color:#f0f0f0f2 !important" class="primary">
                 <q-btn round flat icon="keyboard_arrow_left" class="WAL__drawer-open q-mr-sm"
                     @click="toggleLeftDrawer" />
-                <div class="q-gutter-sm flex items-center">
-                    <span class="q-subtitle-1">
-                        {{ note.title }}
-                    </span>
-                </div>
+
                 <q-space />
                 <q-btn icon="delete" color="negative" round flat  @click="deleteNote" />
             </q-toolbar>
         </q-header>
         <q-page class="q-pa-lg col col-12">
             <div class="q-gutter-md">
-                <q-input square borderless bg-color="white" input-style="padding-left: 10px !important ;"
-                    v-model="note.title" @keydown="markDirty" class="col-12 q-ml-md" :blur="saveNote" />
+                <q-input square borderless bg-color="white" input-style="padding-left: 10px !important"
+                    v-model="note.title" @keydown="markDirty" class="col-12 q-ml-md" :blur="saveNote"/>
                 <q-editor v-model="note.content" min-height="50vh" autogrow flat :blur="saveNote"
                     @keydown="markDirty" />
             </div>
@@ -138,7 +134,7 @@ onUnmounted(() => {
 });
 
 async function deleteNote() {
-    if (!confirm('Are you sure you want to delete this note?')) return;
+    if (!confirm('Voce tem certeza que deseja excluir esta nota?')) return;
 
     await api.delete(`/notes/${note.noteId}`)
 

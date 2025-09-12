@@ -17,6 +17,7 @@ public class NoteService
 {
         private readonly DynamoDBContext _dbContext;
         public readonly Dictionary<string, string> Headers = new Dictionary<string, string> { { "Access-Control-Allow-Origin", "*" } };
+        public readonly int TOTAL_NOTES_PER_USER = Convert.ToInt32(Environment.GetEnvironmentVariable("TOTAL_NOTES_PER_USER"));
         private readonly JsonSerializerSettings _options = new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
@@ -33,11 +34,22 @@ public class NoteService
                 return new APIGatewayProxyResponse
                 {
                     StatusCode = (int)HttpStatusCode.BadRequest,
-                    Body = "Note title cannot be empty.",
+                    Body = "Título não pode ser vazio",
                     Headers =Headers
                 };
             }
 
+            var notes = await _dbContext.QueryAsync<Note>(userId).GetRemainingAsync();
+            if (notes.Count >= TOTAL_NOTES_PER_USER)
+            {
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = (int)HttpStatusCode.UnprocessableEntity,
+                    Body = "Seu plano atual permite apenas "+TOTAL_NOTES_PER_USER + " anotacões",
+                    Headers =Headers
+                };
+            }
+            
             newNote.UserId = userId;
             newNote.NoteId = Guid.NewGuid().ToString();
             newNote.UpdatedAt = DateTime.UtcNow.ToLongDateString();

@@ -1,8 +1,9 @@
 <template>
-    <div class="WAL position-relative bg-grey-4" :style="style">
+    <div class="WAL position-relative" :style="style">
         <q-layout view="lHh Lpr lFf" class="WAL__layout shadow-3" container>
-            <q-page-container class="bg-grey-2">
-                <EditNote :noteId="noteId" v-if="noteId" :key="count" @toggleLeftDrawer="toggleLeftDrawer" @noteDeleted="NoteDeletedHandler"/>
+            <q-page-container style="background: #f0f0f0f2;">
+                <EditNote :noteId="noteId" v-if="noteId"
+                        :key="count" @toggleLeftDrawer="toggleLeftDrawer" @noteDeleted="NoteDeletedHandler"/>
                  <q-page class="q-pa-lg col col-12" v-if="!noteId">
                     <q-btn round flat icon="keyboard_arrow_left" class="WAL__drawer-open q-mr-sm"
                     @click="toggleLeftDrawer" />
@@ -30,11 +31,11 @@
                     </q-toolbar>
 
                     <q-scroll-area style="height: calc(100% - 100px)">
-                        <ListDocumentComponent  @noteSelected="NoteSelectedHandler" ref="listDocumentRef"/>
+                        <ListDocumentComponent  @noteSelected="NoteSelectedHandler"
+                        ref="listDocumentRef" :noteId="noteId" :key="count"/>
                     </q-scroll-area>
                 </q-drawer>
                 <q-page-sticky position="bottom-right" :offset="[18, 18]">
-
                     <q-btn fab icon="add" color="primary" @click="newDocument"/>
                 </q-page-sticky>
 
@@ -108,7 +109,7 @@ async function newDocument() {
     };
 
     try {
-        debugger
+
         const res = await api.post('/notes', newNote);
         await listDocumentRef.value.getNotes();
         const noteId = res.data.noteId;
@@ -143,19 +144,12 @@ const style = computed(() => ({
 </script>
 
 <style lang="sass">
+
 .WAL
   width: 100%
   height: 100%
   padding-top: 20px
   padding-bottom: 20px
-
-  &:before
-    content: ''
-    height: 127px
-    position: fixed
-    top: 0
-    width: 100%
-    background-color: #013750
 
   &__layout
     margin: 0 auto
@@ -184,13 +178,26 @@ const style = computed(() => ({
     &__drawer-open
       display: none
 
-.conversation__summary
-  margin-top: 4px
 
-.conversation__more
-  margin-top: 0!important
-  font-size: 1.4rem
+html
+  width: 100%
+  height: 100%
 
-.new_note-btn
-  color: white
+body
+  width: 100%
+  height: 100%
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)
+  background-size: 400% 400%
+  animation: gradient 15s ease infinite
+
+@keyframes gradient
+  0%
+    background-position: 0% 50%
+
+  50%
+    background-position: 100% 50%
+
+  100%
+    background-position: 0% 50%
+
 </style>
