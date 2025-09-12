@@ -2,15 +2,14 @@
     <div>
         <q-list>
             <q-item-label header> Minhas notas </q-item-label>
-            <q-item v-for="doc in documents" :key="doc.noteId" clickable @click="selectDocument(doc)"
-              v-ripple>
-                <q-item-section>
-
+            <q-item v-for="doc in documents"
+                    :key="doc.noteId"
+                    clickable @click="selectDocument(doc)" v-ripple :active="(noteIdSelected===doc.noteId)" active-class="note-selected ">
+                <q-item-section >
                     <q-item-label>{{ doc.title }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
-                    <q-icon name="mode_edit" />
-
+                    <q-icon name="keyboard_arrow_right" :style="{ color: (noteIdSelected === doc.noteId ? 'white' : 'inherit') }"/>
                 </q-item-section>
             </q-item>
         </q-list>
@@ -66,3 +65,9 @@ onMounted(async () => {
 
 
 </script>
+
+<style lang="sass">
+.note-selected
+  color: white
+  background: #00988D
+</style>

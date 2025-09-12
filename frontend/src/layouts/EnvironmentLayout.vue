@@ -2,12 +2,8 @@
     <div class="WAL position-relative bg-grey-4" :style="style">
         <q-layout view="lHh Lpr lFf" class="WAL__layout shadow-3" container>
             <q-page-container class="bg-grey-2">
-                <EditNote :noteId="noteId" v-if="noteId" :key="count" @toggleLeftDrawer="toggleLeftDrawer"/>
-                 <q-page class="q-pa-lg col col-12" v-if="!noteId">
-                    <div class="q-gutter-md flex items-end justify-center" style="padding-top: 50%;">
-                             <q-btn color="primary"  class="col-12"    icon="note_add" label="Novo" align="center" @click="newDocument"/>
-                    </div>
-                </q-page>
+                <EditNote :noteId="noteId" v-if="noteId" :key="count" @toggleLeftDrawer="toggleLeftDrawer" @noteDeleted="NoteDeletedHandler"/>
+                 <q-page class="q-pa-lg col col-12" v-if="!noteId"></q-page>
                 <q-drawer v-model="leftDrawerOpen" show-if-above bordered :breakpoint="690">
                     <q-toolbar class="bg-grey-3">
 
@@ -30,16 +26,14 @@
 
                     </q-toolbar>
 
-                    <q-toolbar class="bg-grey-2 flex items-end justify-center">
-
-                        <q-btn color="primary" class="col-12"  flat  icon="note_add" label="Novo" align="center" @click="newDocument"/>
-
-                    </q-toolbar>
-
                     <q-scroll-area style="height: calc(100% - 100px)">
-                        <ListDocumentComponent :noteId="noteId" @noteSelected="NoteSelectedHandler" ref="listDocumentRef"/>
+                        <ListDocumentComponent :noteId="noteId" @noteSelected="NoteSelectedHandler" ref="listDocumentRef"
+                         />
                     </q-scroll-area>
                 </q-drawer>
+                <q-page-sticky position="bottom-right" :offset="[18, 18]">
+                    <q-btn fab icon="add" color="primary" @click="newDocument"/>
+                </q-page-sticky>
 
             </q-page-container>
 
@@ -123,6 +117,15 @@ async function newDocument() {
     }
 }
 
+async function NoteDeletedHandler() {
+    console.log('Note deleted, navigating to environment');
+    noteId.value = '';
+    count++;
+    await listDocumentRef.value.getNotes();
+
+    router.push({ path: `/environment` }).catch((err) => console.error('Router error:', err));
+
+}
 
 const $q = useQuasar()
 
@@ -148,7 +151,7 @@ const style = computed(() => ({
     position: fixed
     top: 0
     width: 100%
-    background-color: #007a96
+    background-color: #013750
 
   &__layout
     margin: 0 auto
@@ -183,4 +186,7 @@ const style = computed(() => ({
 .conversation__more
   margin-top: 0!important
   font-size: 1.4rem
+
+.new_note-btn
+  color: white
 </style>

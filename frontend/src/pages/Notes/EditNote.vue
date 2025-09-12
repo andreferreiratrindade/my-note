@@ -4,40 +4,37 @@
             <q-toolbar class="bg-grey-3 text-black">
                 <q-btn round flat icon="keyboard_arrow_left" class="WAL__drawer-open q-mr-sm"
                     @click="toggleLeftDrawer" />
+                <div class="q-gutter-sm flex items-center">
+                    <span class="q-subtitle-1">
+                        {{ note.title }}
+                    </span>
+                </div>
                 <q-space />
-                <div v-if="note.noteId" >
-                    <span v-if="isSaving">   <q-circular-progress
-                    indeterminate
-                    rounded
-                    color="black"
-                    track-color="transparent"
-                    size="33px"
-                    /></span>
-                    <span v-else-if="lastError" class="text-negative">⚠️ {{ lastError }}</span>
-                    <span v-else><q-icon name="done_all" color="blue" size="33px" /></span>
-                    </div>
+                <q-btn icon="delete" color="negative" round flat  @click="deleteNote" />
             </q-toolbar>
         </q-header>
-        <q-page class="q-pa-lg col col-12" >
+        <q-page class="q-pa-lg col col-12">
             <div class="q-gutter-md">
-                  <q-input  square borderless bg-color="white" input-style="padding-left: 10px !important ;"
-                  v-model="note.title"  @keydown="markDirty" class="col-12 q-ml-md" :blur="saveNote"  />
-                    <q-editor v-model="note.content" min-height="50vh" autogrow flat :blur="saveNote"  @keydown="markDirty"/>
+                <q-input square borderless bg-color="white" input-style="padding-left: 10px !important ;"
+                    v-model="note.title" @keydown="markDirty" class="col-12 q-ml-md" :blur="saveNote" />
+                <q-editor v-model="note.content" min-height="50vh" autogrow flat :blur="saveNote"
+                    @keydown="markDirty" />
             </div>
         </q-page>
     </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted, onUnmounted } from "vue";
-const emit = defineEmits(['toggleLeftDrawer']);
+import { reactive, ref, onMounted, onUnmounted } from 'vue';
+const emit = defineEmits(['toggleLeftDrawer', 'noteDeleted']);
+
 
 // Define the toggleLeftDrawer method
 function toggleLeftDrawer() {
-    emit("toggleLeftDrawer");
+    emit('toggleLeftDrawer');
 }
-import { api } from "src/boot/axios";
-import { watchDebounced } from "@vueuse/core";
+import { api } from 'src/boot/axios';
+import { watchDebounced } from '@vueuse/core';
 
 interface Note {
     noteId: string;
@@ -47,9 +44,9 @@ interface Note {
 }
 
 const note = reactive<Note>({
-    noteId: "",
-    title: "",
-    content: "",
+    noteId: '',
+    title: '',
+    content: '',
 });
 
 let oldNote: Note = { ...note };
@@ -59,18 +56,18 @@ const lastError = ref<string | null>(null);
 const props = defineProps({
     noteId: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
 });
 // --- Mark dirty (user started typing) ---
 function markDirty() {
     isSaving.value = true;
-};
+}
 // --- API: Load note ---
 async function getNote() {
     const noteId = props.noteId;
     if (!noteId) {
-        lastError.value = "Invalid note ID";
+        lastError.value = 'Invalid note ID';
         return;
     }
 
@@ -79,10 +76,10 @@ async function getNote() {
         Object.assign(note, res.data);
         oldNote = { ...note };
     } catch (err) {
-        console.error("Error loading note:", err);
-        lastError.value = "Failed to load note";
+        console.error('Error loading note:', err);
+        lastError.value = 'Failed to load note';
     }
-};
+}
 
 // --- API: Save note ---
 async function saveNote() {
@@ -94,11 +91,9 @@ async function saveNote() {
     try {
         await api.put(`/notes/${note.noteId}`, note);
         oldNote = { ...note };
-        
     } catch (err) {
-        console.error("Error saving note:", err);
-        lastError.value =
-            err instanceof Error ? err.message : "Failed to save note";
+        console.error('Error saving note:', err);
+        lastError.value = err instanceof Error ? err.message : 'Failed to save note';
 
         // retry once after 30s
         setTimeout(() => {
@@ -107,9 +102,7 @@ async function saveNote() {
     } finally {
         isSaving.value = false;
     }
-};
-
-
+}
 
 // --- Lifecycle: load & setup listeners ---
 function handleVisibilityChange() {
@@ -125,20 +118,29 @@ watchDebounced(
     () => {
         void saveNote();
     },
-    { deep: true, debounce: 3000 } // 3s debounce feels better than 30s
+    { deep: true, debounce: 3000 }, // 3s debounce feels better than 30s
 );
 
 onMounted(async () => {
     await getNote();
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('beforeunload', handleBeforeUnload);
 });
 
 onUnmounted(() => {
     void saveNote();
-    document.removeEventListener("visibilitychange", handleVisibilityChange);
-    window.removeEventListener("beforeunload", handleBeforeUnload);
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    window.removeEventListener('beforeunload', handleBeforeUnload);
 });
+
+async function deleteNote() {
+    if (!confirm('Are you sure you want to delete this note?')) return;
+
+    await api.delete(`/notes/${note.noteId}`)
+
+     emit('noteDeleted');
+
+}
 
 
 </script>
