@@ -3,7 +3,10 @@
         <q-layout view="lHh Lpr lFf" class="WAL__layout shadow-3" container>
             <q-page-container class="bg-grey-2">
                 <EditNote :noteId="noteId" v-if="noteId" :key="count" @toggleLeftDrawer="toggleLeftDrawer" @noteDeleted="NoteDeletedHandler"/>
-                 <q-page class="q-pa-lg col col-12" v-if="!noteId"></q-page>
+                 <q-page class="q-pa-lg col col-12" v-if="!noteId">
+                    <q-btn round flat icon="keyboard_arrow_left" class="WAL__drawer-open q-mr-sm"
+                    @click="toggleLeftDrawer" />
+                 </q-page>
                 <q-drawer v-model="leftDrawerOpen" show-if-above bordered :breakpoint="690">
                     <q-toolbar class="bg-grey-3">
 
@@ -32,6 +35,7 @@
                     </q-scroll-area>
                 </q-drawer>
                 <q-page-sticky position="bottom-right" :offset="[18, 18]">
+
                     <q-btn fab icon="add" color="primary" @click="newDocument"/>
                 </q-page-sticky>
 
