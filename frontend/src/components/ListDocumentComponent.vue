@@ -2,14 +2,16 @@
     <div>
         <q-toolbar class="bg-grey-2">
          <div style="font-size: medium;">
-            Minhas Anotações
+            My Notes
         </div>
         </q-toolbar>
 
         <q-list >
             <q-item v-for="doc in documents"
                     :key="doc.noteId"
-                    clickable @click="selectDocument(doc)" v-ripple :active="(noteIdSelected===doc.noteId)" active-class="note-selected ">
+                    clickable @click="selectDocument(doc)"
+                    v-ripple :active="(noteIdSelected===doc.noteId)"
+                    active-class="note-selected ">
                 <q-item-section >
                     <q-item-label>{{ doc.title }}</q-item-label>
                 </q-item-section>

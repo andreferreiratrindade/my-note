@@ -1,18 +1,15 @@
 <template>
     <div>
-        <q-header style="background-color:#f0f0f0f2 !important" >
-            <q-toolbar style="background-color:#f0f0f0f2 !important" class="primary">
-                <q-btn round flat icon="keyboard_arrow_left" class="WAL__drawer-open q-mr-sm"
-                    @click="toggleLeftDrawer" />
+         <q-page class="q-pa-lg">
 
-                <q-space />
-                <q-btn icon="delete" color="negative" round flat  @click="deleteNote" />
-            </q-toolbar>
-        </q-header>
-        <q-page class="q-pa-lg col col-12">
-            <div class="q-gutter-md">
+            <div class="row justify-between">
+                <q-btn round icon="keyboard_arrow_left" @click="toggleLeftDrawer" class="WAL__drawer-open q-mr-sm"/>
+                <q-btn icon="delete" color="negative" round flat @click="deleteNote" />
+            </div>
+
+            <div class="q-gutter-md" style="margin-top:10px">
                 <q-input square borderless bg-color="white" input-style="padding-left: 10px !important"
-                    v-model="note.title" @keydown="markDirty" class="col-12 q-ml-md" :blur="saveNote"/>
+                    v-model="note.title" @keydown="markDirty" class="col-12 q-ml-md" :blur="saveNote" />
                 <q-editor v-model="note.content" min-height="50vh" autogrow flat :blur="saveNote"
                     @keydown="markDirty" />
             </div>
@@ -70,9 +67,9 @@ async function getNote() {
     try {
         const res = await api.get<Note>(`/notes/${noteId}`);
         Object.assign(note, {
-          ...res.data,
-          title: res.data.title ?? "",
-          content: res.data.content ?? ""
+            ...res.data,
+            title: res.data.title ?? "",
+            content: res.data.content ?? ""
         });
         oldNote = { ...note };
     } catch (err) {
@@ -138,7 +135,7 @@ async function deleteNote() {
 
     await api.delete(`/notes/${note.noteId}`)
 
-     emit('noteDeleted');
+    emit('noteDeleted');
 
 }
 

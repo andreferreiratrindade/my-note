@@ -34,7 +34,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     const user = await userManager.getUser();
 
     if (to.meta.requiresAuth && (user == null || user.expired)) {
-      next("/login");
+        await userManager.signinRedirect();
     }
 
     if(to.path === "/login" && user != null && !user.expired) {

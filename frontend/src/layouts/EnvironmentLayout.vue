@@ -1,9 +1,10 @@
 <template>
     <div class="WAL position-relative" :style="style">
-        <q-layout view="lHh Lpr lFf" class="WAL__layout shadow-3" container>
+        <q-layout view="lHh Lpr lFf" class="WAL__layout shadow-10" container>
             <q-page-container style="background: #f0f0f0f2;">
                 <EditNote :noteId="noteId" v-if="noteId"
-                        :key="count" @toggleLeftDrawer="toggleLeftDrawer" @noteDeleted="NoteDeletedHandler"/>
+                        :key="keyEditComponent" @toggleLeftDrawer="toggleLeftDrawer"
+                        @noteDeleted="NoteDeletedHandler"/>
                  <q-page class="q-pa-lg col col-12" v-if="!noteId">
                     <q-btn round flat icon="keyboard_arrow_left" class="WAL__drawer-open q-mr-sm"
                     @click="toggleLeftDrawer" />
@@ -32,7 +33,7 @@
 
                     <q-scroll-area style="height: calc(100% - 100px)">
                         <ListDocumentComponent  @noteSelected="NoteSelectedHandler"
-                        ref="listDocumentRef" :noteId="noteId" :key="count"/>
+                        ref="listDocumentRef" :noteId="noteId" :key="keyNotesListComponent"/>
                     </q-scroll-area>
                 </q-drawer>
                 <q-page-sticky position="bottom-right" :offset="[18, 18]">
@@ -70,10 +71,11 @@ const route = useRoute();
 const emailUser = ref('Loading...');
 const noteId = ref(''); // Example noteId, replace with actual logic to get noteId
 const leftDrawerOpen = ref(false);
-const count = ref(0);
+const keyEditComponent = ref(0);
+const keyNotesListComponent = ref(0);
 function NoteSelectedHandler(selectedNoteId: string) {
     noteId.value = selectedNoteId;
-    count.value++;
+    keyEditComponent.value++;
 }
 
 function toggleLeftDrawer() {
@@ -125,7 +127,7 @@ async function newDocument() {
 async function NoteDeletedHandler() {
     console.log('Note deleted, navigating to environment');
     noteId.value = '';
-    count.value++;
+    keyNotesListComponent.value++;
     await listDocumentRef.value.getNotes();
 
     router.push({ path: `/environment` }).catch((err) => console.error('Router error:', err));
