@@ -2,7 +2,7 @@
   "name": "my-note",
   "version": "0.0.1",
   "description": "Caderno de anotações simples",
-  "productName": "Meu Caderno",
+  "productName": "My Notes",
   "author": "Andre Ferreira Trindade <andreferreiratrindade@gmail.com>",
   "type": "module",
   "private": true,

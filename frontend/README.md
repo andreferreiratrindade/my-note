@@ -1,4 +1,4 @@
-# Meu Caderno (my-note)
+# My Notes (my-note)
 
 A Quasar Project
 

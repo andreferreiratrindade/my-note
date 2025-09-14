@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar'
+import { useQuasar, Notify } from 'quasar'
 import { ref, computed } from 'vue'
 
 import { userManager, signOutRedirect } from 'src/services/OidcClientService';
@@ -59,6 +59,7 @@ import ListDocumentComponent from 'src/components/ListDocumentComponent.vue';
 import EditNote from 'src/pages/Notes/EditNote.vue';
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
+import { AxiosError } from 'axios';
 
 const router = useRouter();
 
@@ -120,6 +121,12 @@ async function newDocument() {
 
         NoteSelectedHandler(noteId);
     } catch (err: unknown) {
+
+        Notify.create({
+          message: (err instanceof AxiosError ? err.response?.data : String(err)) || 'An unknown error occurred',
+          type: 'negative',
+          timeout:7_000
+        })
         console.error('Error saving note:', err);
     }
 }

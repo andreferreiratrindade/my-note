@@ -5,8 +5,7 @@
 
   <q-page class="q-pa-lg flex flex-center">
     <div class="text-center">
-
-      <h1 class="text-h3 q-mb-md">📝 My Notes</h1>
+      <h1 class="text-h3 q-mb-md">My Notes</h1>
       <p class="text-subtitle1 q-mb-lg">
         A simple and fast way to capture your ideas, with <b>autosave</b> built in.
       </p>
