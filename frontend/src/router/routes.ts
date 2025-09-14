@@ -10,6 +10,10 @@ const routes: RouteRecordRaw[] = [
     path: "/callback",
     component: () => import("src/pages/oidc/CallBackPage.vue")
   },
+    {
+    path: "/architecture",
+    component: () => import("src/pages/ArchitecturePage.vue")
+  },
   {
     path: '/environment',
     component: () => import('layouts/EnvironmentLayout.vue'), meta: { requiresAuth: true },

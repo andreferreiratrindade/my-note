@@ -28,6 +28,8 @@
     <p class="text-caption q-mt-md">
         v1.0 • Built by <a href="https://www.linkedin.com/in/andr%C3%A9-ferreira-trindade-6883846a/" target="_blank"> André Trindade</a>
       </p>
+        <q-btn color="primary" label="Architecture"  to="/architecture" no-caps/>
+
     </div>
   </q-page>
     </q-page-container>
